@@ -1,6 +1,5 @@
-#include <gtest/gtest.h>
 #include <Greet.hpp>
-
+#include <gtest/gtest.h>
 #include <sstream>
 
 using namespace std;

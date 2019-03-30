@@ -22,7 +22,7 @@ endif()
 ################################   GOOGLE TEST   ###############################
 ################################################################################
 
-#
+# https://github.com/google/googletest/blob/master/googletest/README.md#incorporating-into-an-existing-cmake-project
 # <copy>
 # Download and unpack googletest at configure time
 configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/GoogleTest-CMakeLists.txt.in 

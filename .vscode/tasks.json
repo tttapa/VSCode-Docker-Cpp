@@ -10,6 +10,14 @@
             "dependsOn": "Stop Docker Container", // Restart if already running
             "runOptions": {
                 "runOn": "folderOpen" // Run the container every time this folder is opened
+            },
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
             }
         },
         {
@@ -17,8 +25,13 @@
             "type": "shell",
             "command": "docker-compose -f compose.yml down",
             "problemMatcher": [],
-            "runOptions": {
-                "runOn": "default"
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+                "focus": false,
+                "panel": "dedicated",
+                "showReuseMessage": false,
+                "clear": true
             }
         },
         {
