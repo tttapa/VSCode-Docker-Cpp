@@ -1,0 +1,146 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        // https://medium.com/@aharon.amir/develop-c-on-docker-with-vscode-98fb85b818b2
+        {
+            "label": "Start Docker Container",
+            "type": "shell",
+            "command": "docker-compose -f compose.yml run --service-ports --name devenv dev-image bash",
+            "problemMatcher": [],
+            "dependsOn": "Stop Docker Container", // Restart if already running
+            "runOptions": {
+                "runOn": "folderOpen" // Run the container every time this folder is opened
+            }
+        },
+        {
+            "label": "Stop Docker Container",
+            "type": "shell",
+            "command": "docker-compose -f compose.yml down",
+            "problemMatcher": [],
+            "runOptions": {
+                "runOn": "default"
+            }
+        },
+        {
+            "label": "Run CMake (Docker)",
+            "type": "shell",
+            "command": "docker exec -it -w  ${workspaceRoot}/build devenv cmake ..",
+            "problemMatcher": [],
+        },
+        {
+            "label": "Run CMake (Local)",
+            "type": "shell",
+            "command": "cmake ..",
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "problemMatcher": [],
+        },
+        {
+            "label": "Build All (Docker)",
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "command": "docker exec -it -w  ${workspaceRoot}/build devenv make -j$(nproc)",
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Build All (Local)",
+            "type": "shell",
+            "command": "make -j$(nproc)",
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Run Tests (Docker)",
+            "type": "shell",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "command": "docker exec -it -w ${workspaceRoot}/build devenv sh -c \"make -j$(nproc) && make test\"",
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Run Tests (Local)",
+            "type": "shell",
+            "command": "make -j$(nproc) && make test",
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Make Clean (Docker)",
+            "type": "shell",
+            "command": "docker exec -it -w ${workspaceRoot}/build devenv make clean",
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Make Clean (Local)",
+            "type": "shell",
+            "command": "make clean",
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Start GDB Server",
+            "type": "shell",
+            // not using -it so that it can be a preLaunchTask
+            "command": "docker exec -d devenv gdbserver localhost:2000  ${workspaceRoot}/build/bin/hello-world",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build Docker Image",
+            "type": "shell",
+            // not using -it so that it can be a preLaunchTask
+            "command": "docker build -f Dockerfile --build-arg WORKSPACE_ROOT=${workspaceRoot} -t eagle1/baremetal/develop .",
+            "problemMatcher": []
+        },
+        {
+            // running without debugging
+            "label": "Run Application (Docker)",
+            "type": "shell",
+            "command": "docker exec -it devenv ${workspaceRoot}/build/bin/hello-world",
+            "problemMatcher": []
+        },
+        {
+            // running without debugging
+            "label": "Run Application (Local)",
+            "type": "shell",
+            "command": "./hello-world",
+            "options": {
+                "cwd": "${workspaceRoot}/build/bin"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Stop Application (Docker)",
+            "type": "shell",
+            // not using -it so that it can be a preLaunchTask
+            "command": "docker exec -d devenv pkill hello-world",
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate Documentation",
+            "type": "shell",
+            "command": "doxygen",
+            "options": {
+                "cwd": "${workspaceFolder}/doc"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Clear 'build' Directory",
+            "type": "shell",
+            "command": "find ${workspaceFolder}/build -type f -not -name '.gitignore' -print0 | xargs -0 rm --",
+            "problemMatcher": []
+        }
+    ]
+}
