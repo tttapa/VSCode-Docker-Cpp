@@ -6,6 +6,9 @@
             "label": "Start Docker Container",
             "type": "shell",
             "command": "docker-compose -f compose.yml run --service-ports --name devenv dev-image bash",
+            "windows": {
+                "command": "docker-compose -f compose.win.yml run --service-ports --name devenv dev-image bash",
+            },
             "problemMatcher": [],
             "dependsOn": "Stop Docker Container", // Restart if already running
             "runOptions": {
@@ -24,6 +27,9 @@
             "label": "Stop Docker Container",
             "type": "shell",
             "command": "docker-compose -f compose.yml down",
+            "windows": {
+                "command": "docker-compose -f compose.win.yml down",
+            },
             "problemMatcher": [],
             "presentation": {
                 "echo": false,
@@ -37,7 +43,10 @@
         {
             "label": "Run CMake (Docker)",
             "type": "shell",
-            "command": "docker exec -it -w  ${workspaceRoot}/build devenv cmake ..",
+            "command": "docker exec -it -w  ${workspaceFolder}/build devenv cmake ..",
+            "windows": {
+                "command": "docker exec -it -w  /home/develop/eagle/build devenv cmake ..",
+            },
             "problemMatcher": [],
         },
         {
@@ -45,7 +54,7 @@
             "type": "shell",
             "command": "cmake ..",
             "options": {
-                "cwd": "${workspaceRoot}/build"
+                "cwd": "${workspaceFolder}/build"
             },
             "problemMatcher": [],
         },
@@ -56,7 +65,10 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "command": "docker exec -it -w  ${workspaceRoot}/build devenv make -j$(nproc)",
+            "command": "docker exec -it -w  ${workspaceFolder}/build devenv make -j$(nproc)",
+            "windows": {
+                "command": "docker exec -it -w  /home/develop/eagle/build devenv sh -c 'make -j $(nproc)'",
+            },
             "problemMatcher": "$gcc"
         },
         {
@@ -64,7 +76,7 @@
             "type": "shell",
             "command": "make -j$(nproc)",
             "options": {
-                "cwd": "${workspaceRoot}/build"
+                "cwd": "${workspaceFolder}/build"
             },
             "problemMatcher": "$gcc"
         },
@@ -75,7 +87,10 @@
                 "kind": "test",
                 "isDefault": true
             },
-            "command": "docker exec -it -w ${workspaceRoot}/build devenv sh -c \"make -j$(nproc) && make test\"",
+            "command": "docker exec -it -w ${workspaceFolder}/build devenv sh -c \"make -j$(nproc) && make test\"",
+            "windows": {
+                "command": "docker exec -it -w /home/develop/eagle/build devenv sh -c 'make -j$(nproc) && make test'",
+            },
             "problemMatcher": "$gcc"
         },
         {
@@ -83,14 +98,17 @@
             "type": "shell",
             "command": "make -j$(nproc) && make test",
             "options": {
-                "cwd": "${workspaceRoot}/build"
+                "cwd": "${workspaceFolder}/build"
             },
             "problemMatcher": "$gcc"
         },
         {
             "label": "Make Clean (Docker)",
             "type": "shell",
-            "command": "docker exec -it -w ${workspaceRoot}/build devenv make clean",
+            "command": "docker exec -it -w ${workspaceFolder}/build devenv make clean",
+            "windows": {
+                "command": "docker exec -it -w /home/develop/eagle/build devenv make clean",
+            },
             "problemMatcher": "$gcc"
         },
         {
@@ -98,7 +116,7 @@
             "type": "shell",
             "command": "make clean",
             "options": {
-                "cwd": "${workspaceRoot}/build"
+                "cwd": "${workspaceFolder}/build"
             },
             "problemMatcher": "$gcc"
         },
@@ -107,20 +125,29 @@
             "type": "shell",
             // not using -it so that it can be a preLaunchTask
             "command": "docker exec -d devenv gdbserver localhost:2000  ${workspaceRoot}/build/bin/hello-world",
+            "windows": {
+                "command": "docker exec -d devenv gdbserver localhost:2000  /home/develop/eagle/build/bin/hello-world",
+            },
             "problemMatcher": []
         },
         {
             "label": "Build Docker Image",
             "type": "shell",
             // not using -it so that it can be a preLaunchTask
-            "command": "docker build -f Dockerfile --build-arg WORKSPACE_ROOT=${workspaceRoot} -t eagle1/baremetal/develop .",
+            "command": "docker build -f Dockerfile --build-arg WORKSPACE_ROOT=${workspaceFolder} -t eagle1/baremetal/develop .",
+            "windows": {
+                "command": "docker build -f Dockerfile -t eagle1/baremetal/develop .",
+            },
             "problemMatcher": []
         },
         {
             // running without debugging
             "label": "Run Application (Docker)",
             "type": "shell",
-            "command": "docker exec -it devenv ${workspaceRoot}/build/bin/hello-world",
+            "command": "docker exec -it devenv ${workspaceFolder}/build/bin/hello-world",
+            "windows": {
+                "command": "docker exec -it devenv /home/develop/eagle/build/bin/hello-world",
+            },
             "problemMatcher": []
         },
         {
@@ -129,7 +156,7 @@
             "type": "shell",
             "command": "./hello-world",
             "options": {
-                "cwd": "${workspaceRoot}/build/bin"
+                "cwd": "${workspaceFolder}/build/bin"
             },
             "problemMatcher": []
         },
@@ -153,6 +180,9 @@
             "label": "Clear 'build' Directory",
             "type": "shell",
             "command": "find ${workspaceFolder}/build -type f -not -name '.gitignore' -print0 | xargs -0 rm --",
+            "windows": {
+                "command": "Remove-Item ${workspaceFolder}/build/ -Recurse -Exclude .gitignore"
+            },
             "problemMatcher": []
         }
     ]
