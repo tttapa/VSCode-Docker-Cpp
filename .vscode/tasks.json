@@ -67,7 +67,7 @@
             },
             "command": "docker exec -it -w  ${workspaceFolder}/build devenv make -j$(nproc)",
             "windows": {
-                "command": "docker exec -it -w  /home/develop/eagle/build devenv sh -c 'make -j $(nproc)'",
+                "command": "docker exec -it -w /home/develop/eagle/build devenv sh -c 'make -j $(nproc)'",
             },
             "problemMatcher": "$gcc"
         },
@@ -87,7 +87,7 @@
                 "kind": "test",
                 "isDefault": true
             },
-            "command": "docker exec -it -w ${workspaceFolder}/build devenv sh -c \"make -j$(nproc) && make test\"",
+            "command": "docker exec -it -w ${workspaceFolder}/build devenv sh -c 'make -j$(nproc) && make test'",
             "windows": {
                 "command": "docker exec -it -w /home/develop/eagle/build devenv sh -c 'make -j$(nproc) && make test'",
             },
@@ -133,15 +133,13 @@
         {
             "label": "Build Docker Image",
             "type": "shell",
-            // not using -it so that it can be a preLaunchTask
             "command": "docker build -f Dockerfile --build-arg WORKSPACE_ROOT=${workspaceFolder} -t eagle1/baremetal/develop .",
             "windows": {
-                "command": "docker build -f Dockerfile -t eagle1/baremetal/develop .",
+                "command": "docker build -f Dockerfile.win -t eagle1/baremetal/develop .",
             },
             "problemMatcher": []
         },
         {
-            // running without debugging
             "label": "Run Application (Docker)",
             "type": "shell",
             "command": "docker exec -it devenv ${workspaceFolder}/build/bin/hello-world",
@@ -151,7 +149,6 @@
             "problemMatcher": []
         },
         {
-            // running without debugging
             "label": "Run Application (Local)",
             "type": "shell",
             "command": "./hello-world",
@@ -163,7 +160,6 @@
         {
             "label": "Stop Application (Docker)",
             "type": "shell",
-            // not using -it so that it can be a preLaunchTask
             "command": "docker exec -d devenv pkill hello-world",
             "problemMatcher": []
         },
