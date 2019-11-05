@@ -2,6 +2,11 @@
 
 Building and debugging C++ applications in a Docker container using Visual Studio Code.
 
+## Edit 5/11/2019: Use the Visual Studio Code Remote - Containers extension
+
+When I originally created this repository, this was a good solution to the problem I had to solve. However, I think there's a better solution available now: the [**Visual Studio Code Remote - Containers** extension](https://code.visualstudio.com/docs/remote/containers).  
+I'd highly recommend using that approach for new projects.
+
 ## Installation
 
 Install [Docker](https://www.docker.com) and [Visual Studio Code](https://code.visualstudio.com), 
@@ -42,7 +47,6 @@ If you're on a UNIX-like operating system, you can also debug the application lo
 ## Known limitations
 
 - When debugging an application in the Docker container, you don't have access to its standard in and outputs. 
-  The VSCode option `"externalConsole": true` doesn't seem to have any effect when connecting to a remote GDB server.  
   You can still inspect the variables and step through the program, etc.
 - Debugging in Windows is not possible: getting GCC to work on Windows is hard, and the VSCode debugger on Windows
   doesn't seem to be able to connect to a remote GDB server.
